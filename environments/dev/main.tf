@@ -15,16 +15,60 @@
 
 locals {
   env = "dev"
+
+  local    = local.env == "local" ? "10.10.0.0/16" : ""
+  dev    = local.env == "dev" ? "10.20.0.0/16" : ""
+  prod    = local.env == "prod" ? "10.30.0.0/16" : ""
+  #find the firset not empty var and uses that ip range
+  ips_range = coalesce(local.local, local.dev, local.prod, var.subnet_ip)
+  ip_ranges = cidrsubnets(local.ips_range, 8, 8, 8)
+  vpc_range = local.ip_ranges[0]
+  ip_cidr_range_pod = local.ip_ranges[1]
+  ip_cidr_range_service = local.ip_ranges[2]
+
 }
+
 
 provider "google" {
   project = "${var.project}"
 }
 
+#import {
+#  id = "projects/${var.project}/policies/constraints/compute.vmExternalIpAccess"
+#  to = google_org_policy_policy.vm_external_ip
+#}
+#resource "google_org_policy_policy" "vm_external_ip" {
+#  name = "projects/${var.project}/policies/constraints/compute.vmExternalIpAccess"
+#  parent = "projects/${var.project}"
+
+#  spec {
+#    reset = true
+#  }
+#}
+
+
 module "vpc" {
   source  = "../../modules/vpc"
   project = "${var.project}"
   env     = "${local.env}"
+  subnet_ip = "${local.vpc_range}"
+  ip_cidr_range_pod = local.ip_cidr_range_pod
+  ip_cidr_range_service = local.ip_cidr_range_service
+  ip_range_pods_name = "${var.ip_range_pods_name}"
+  ip_range_services_name = "${var.ip_range_services_name}"
+  region      = "${var.region}"  
+}
+
+module "gke_auto" {
+  source  = "../../modules/gke_auto"
+  project = "${var.project}"
+  subnet  =  "${module.vpc.subnet}"
+  zones   = "${var.zones}"
+  env     = "${local.env}"
+  region  = "${var.region}"
+  network = "${module.vpc.network}"
+  ip_range_pods_name = "${var.ip_range_pods_name}"
+  ip_range_services_name = "${var.ip_range_services_name}"
 }
 
 # module "http_server" {
