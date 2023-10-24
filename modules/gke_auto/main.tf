@@ -16,7 +16,7 @@
 module "kubernetes-engine_beta-autopilot-public-cluster" {
   source  = "terraform-google-modules/kubernetes-engine/google//modules/beta-autopilot-public-cluster"
   project_id                 = "${var.project}"
-  name                       = "${var.project}-gke"
+  name                       = "${var.project}-${var.env}-gke"
   region                     = "${var.region}"
   zones                      = "${var.zones}"
   network                    = "${var.network}"
