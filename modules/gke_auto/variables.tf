@@ -13,12 +13,21 @@
 # limitations under the License.
 
 
+variable "gke_username" {
+  default     = ""
+  description = "gke username"
+}
+ 
+variable "gke_password" {
+  default     = ""
+  description = "gke password"
+}
+
 variable "project" {}
 variable "env" {}
-variable subnet_ip     { }
-variable region { }
-
+variable "subnet" {}
+variable "zones" {}
+variable "region" {}
+variable "network" {}
 variable "ip_range_pods_name" {}
 variable "ip_range_services_name" {}
-variable "ip_cidr_range_pod" {}
-variable "ip_cidr_range_service" {}

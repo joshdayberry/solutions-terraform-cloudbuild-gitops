@@ -15,3 +15,6 @@
 
 variable "project" {}
 variable "subnet" {}
+variable region {
+    default = "us-central1"
+}

@@ -20,3 +20,14 @@ output "network" {
 output "subnet" {
   value = "${element(module.vpc.subnets_names, 0)}"
 }
+
+output "ip_range_pods_name" {
+  #value = "${element(module.vpc.subnets_secondary_ranges, 0)}"
+  value = "ip-range-pods"
+  #value = "${element(module.vpc.subnets_secondary_ranges, 0)}"
+}
+
+output "ip_range_services_name" {
+  value = "ip-range-ip_range_services"
+  #value = "${element(module.vpc.subnets_secondary_ranges, 1)}"
+}
