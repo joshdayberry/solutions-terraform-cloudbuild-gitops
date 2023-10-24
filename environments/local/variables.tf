@@ -23,7 +23,9 @@ variable "subnet_ip" {
 variable "region" {
     default = "us-central1"
 }
-
+variable "env" {
+    default = "local"
+}
 variable "ip_range_pods_name" {
   type        = string
   description = "The secondary ip range to use for pods"
