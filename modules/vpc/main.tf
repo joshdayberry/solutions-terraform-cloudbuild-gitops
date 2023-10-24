@@ -15,7 +15,6 @@
 
 module "vpc" {
   source  = "terraform-google-modules/network/google"
-  version = "3.3.0"
 
   project_id   = "${var.project}"
   network_name = "${var.env}"
@@ -23,12 +22,21 @@ module "vpc" {
   subnets = [
     {
       subnet_name   = "${var.env}-subnet-01"
-      subnet_ip     = "10.${var.env == "dev" ? 10 : 20}.10.0/24"
-      subnet_region = "us-west1"
+      subnet_ip     = "${var.subnet_ip}"
+      subnet_region = "${var.region}"
     },
   ]
 
-  secondary_ranges = {
-    "${var.env}-subnet-01" = []
+    secondary_ranges = {
+    "${var.env}-subnet-01"= [
+      {
+        range_name    = var.ip_range_pods_name
+        ip_cidr_range = "${var.ip_cidr_range_pod}"
+      },
+      {
+        range_name    = var.ip_range_services_name
+        ip_cidr_range = "${var.ip_cidr_range_service}"
+      },
+    ]
   }
 }

@@ -15,3 +15,10 @@
 
 variable "project" {}
 variable "env" {}
+variable subnet_ip     { }
+variable region { }
+
+variable "ip_range_pods_name" {}
+variable "ip_range_services_name" {}
+variable "ip_cidr_range_pod" {}
+variable "ip_cidr_range_service" {}
